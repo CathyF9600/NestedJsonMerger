@@ -13,11 +13,11 @@ def recursive(d1, d2):
                 d[key] = recursive(d1[key], d2[key])
             if (type(value) is not dict):
                 if (d1[key] == d2[key]):
-                    d[key] = value #blindly copy value eg string
+                    d[key] = value # copy non-dict value eg string
                 else:
                     d[key] = [d1[key], d2[key]] #append conflicts into a list
         else:
-            d[key] = value #blindly copy the entire value
+            d[key] = value # shallow copy the value
 
     for key, value in d2.items():
         if key not in d1:
@@ -33,7 +33,7 @@ def recursive_2(d1, d2, dOut):
                 recursive_2(d1[key], d2[key], dOut[key])
             if (type(value) is not dict):    
                 if (d1[key] == d2[key]):
-                    dOut[key] = value #blindly copy value eg string
+                    dOut[key] = value
                 else:
                     dOut[key] = [d1[key], d2[key]]
         else:
