@@ -2,7 +2,7 @@ import json
 from telnetlib import DO
 import pandas as pd
 import copy
-
+import argparse
 
 ## Actual program
 def recursive(d1, d2):
@@ -68,26 +68,68 @@ destination ={
             }
 }
 ## try running it!
-recursive_2(source, destination,d)
-print(d)
+# recursive_2(source, destination,d)
+# print(d)
 
 
 ## Test it on actual json files
-def merge_JsonFiles(filename):
+def merge_JsonFiles(inFileList, outFileName):
     result = list()
 
-    with open(filename[0], 'r') as infile1:
-        with open(filename[1], 'r') as infile2:
+    with open(inFileList[0], 'r') as infile1:
+        with open(inFileList[1], 'r') as infile2:
             data1 = json.load(infile1)
             data2 = json.load(infile2)
             data3 = recursive(data1, data2)
     
-    print(data3)
+    # print(data3)
                 
 
-    with open('MergeJsonDemo.json', 'w') as output_file:
+    with open(outFileName, 'w') as output_file:
         json.dump(data3, output_file, indent=4)
 
 # files=['../account-service/docs/swagger.json','../payment-service/docs/swagger.json']
 
 # merge_JsonFiles(files)
+
+# Create the parser
+parser = argparse.ArgumentParser()
+# Add an argument
+parser.add_argument('--input', type=str, required=True)
+parser.add_argument('--output', type=str, required=True)
+# Parse the argument
+args = parser.parse_args()
+
+in_str = args.input
+in_list = in_str.split(",")
+in1 = in_list[0]
+in2 = in_list[1]
+print(in1,in2)
+out_str = args.output
+print(out_str)
+
+merge_JsonFiles(in_list, out_str)
+
+
+# Appendix
+# merge Any x, Any y
+# x : Empty
+#     return y
+# x : Key k, Value v
+#     y : Empty
+#         return x
+#     y : Key k, Value w
+#         return ???
+#     y : Key l, Value w
+#         return
+# x : Array [x1...xn], y: Array [y1...yn]
+#     return Array[x_1'...x_n']
+#     where x_i' = merge ( x_1, y[k] )
+
+
+# def fib(x):
+#     if x == 2:
+#         return 1
+#     if x == 1:
+#         return 1
+#     reuturn fib(x-1)+fib(x-2)
